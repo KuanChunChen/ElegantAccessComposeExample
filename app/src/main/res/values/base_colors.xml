@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="light_color_primary_1">#FF457DEF</color>
+    <color name="light_color_primary_2">#FFABBEFE</color>
+    <color name="light_color_primary_3">#FF7C99FC</color>
+    <color name="light_color_primary_4">#FFA2BEF7</color>
+
+    <color name="light_color_text_1">#FF282930</color>
+    <color name="light_color_text_2">#FF464F60</color>
+    <color name="light_color_text_3">#FF666B75</color>
+    <color name="light_color_text_4">#FF878D9A</color>
+    <color name="light_color_text_5">#FFA4A8B3</color>
+    <color name="light_color_text_6">#FFFFFFFF</color>
+
+    <color name="light_color_bg_1">#FFFFFF</color>
+    <color name="light_color_bg_2">#FFFFFFFF</color>
+    <color name="light_color_bg_3">#FFF5F5F5</color>
+    <color name="light_color_bg_4">#FFE8EAEE</color>
+    <color name="light_color_bg_5">#FFF5F7F9</color>
+    <color name="light_color_bg_6">#FFFBFBFB</color>
+
+    <color name="light_color_danger_1">#FFE13E3E</color>
+
+    <color name="light_color_normal_100">#FF42C762</color>
+
+
+    <color name="dark_color_primary_1">#FF3F64E5</color>
+    <color name="dark_color_primary_2">#FF304AA2</color>
+    <color name="dark_color_primary_3">#FF2C4EA0</color>
+    <color name="dark_color_primary_4">#FF203873</color>
+
+    <color name="dark_color_text_3">#FFA1A1A5</color>
+    <color name="dark_color_text_4">#FF7E7E86</color>
+    <color name="dark_color_text_5">#FF636369</color>
+    <color name="dark_color_text_6">#FFF0F0F2</color>
+
+    <color name="dark_color_bg_1">#FF14151B</color>
+    <color name="dark_color_bg_2">#FF24252B</color>
+    <color name="dark_color_bg_3">#FF24252B</color>
+    <color name="dark_color_bg_4">#FF35363B</color>
+    <color name="dark_color_bg_5">#FF1D1E24</color>
+    <color name="dark_color_bg_6">#FF24252B</color>
+
+    <color name="dark_color_danger_1">#FFCC393A</color>
+
+    <color name="dark_color_normal_100">#FF32BA52</color>
+
+    <color name="dark_color_text_1">#FFF0F0F2</color>
+    <color name="dark_color_text_2">#FFCECED4</color>
+
+    <color name="transparent">#00000000</color>
+</resources>

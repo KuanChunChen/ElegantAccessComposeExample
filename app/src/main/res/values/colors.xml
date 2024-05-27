@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="primary">@color/light_color_primary_1</color>
+    <color name="onPrimary">@color/light_color_text_6</color>
+    <color name="primaryContainer">@color/light_color_primary_3</color>
+    <color name="onPrimaryContainer">@color/light_color_primary_4</color>
+    <color name="secondary">@color/light_color_normal_100</color>
+    <color name="onSecondary">@color/light_color_text_6</color>
+    <color name="tertiary">@color/light_color_primary_4</color>
+    <color name="background">@color/light_color_bg_1</color>
+    <color name="onBackground">@color/light_color_text_1</color>
+    <color name="surface">@color/light_color_bg_4</color>
+    <color name="onSurface">@color/light_color_text_3</color>
+    <color name="surfaceVariant">@color/light_color_bg_3</color>
+    <color name="onSurfaceVariant">@color/light_color_text_2</color>
+    <color name="surfaceDim">@color/light_color_text_4</color>
+    <color name="error">@color/light_color_danger_1</color>
+    <color name="onError">@color/light_color_text_6</color>
+    <color name="outlineVariant">@color/light_color_bg_4</color>
+    <color name="surfaceContainerHigh">@color/light_color_bg_6</color>
+    <color name="surfaceContainer">@color/light_color_bg_5</color>
+    <color name="surfaceContainerLow">@color/light_color_text_5</color>
+    <color name="inverseSurface">@color/light_color_primary_2</color>
+</resources>

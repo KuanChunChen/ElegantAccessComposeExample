@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="primary">@color/dark_color_primary_1</color>
+    <color name="onPrimary">@color/dark_color_text_6</color>
+    <color name="primaryContainer">@color/dark_color_primary_3</color>
+    <color name="onPrimaryContainer">@color/dark_color_primary_4</color>
+    <color name="secondary">@color/dark_color_normal_100</color>
+    <color name="onSecondary">@color/dark_color_text_6</color>
+    <color name="tertiary">@color/dark_color_primary_4</color>
+    <color name="background">@color/dark_color_bg_1</color>
+    <color name="onBackground">@color/dark_color_text_1</color>
+    <color name="surface">@color/dark_color_bg_4</color>
+    <color name="onSurface">@color/dark_color_text_3</color>
+    <color name="surfaceVariant">@color/dark_color_bg_3</color>
+    <color name="onSurfaceVariant">@color/dark_color_text_2</color>
+    <color name="surfaceDim">@color/dark_color_text_4</color>
+    <color name="error">@color/dark_color_danger_1</color>
+    <color name="onError">@color/light_color_text_6</color>
+    <color name="outlineVariant">@color/dark_color_bg_4</color>
+    <color name="surfaceContainerHigh">@color/dark_color_bg_6</color>
+    <color name="surfaceContainer">@color/dark_color_bg_5</color>
+    <color name="surfaceContainerLow">@color/dark_color_text_5</color>
+    <color name="inverseSurface">@color/dark_color_primary_2</color>
+</resources>
