@@ -1,4 +1,8 @@
-package elegant.access.compose.example.ui
+package elegant.access.compose.example.di
+
+import dagger.Module
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
 
 /**
  * This file is part of an Android project developed by elegant.access.
@@ -14,9 +18,7 @@ package elegant.access.compose.example.ui
  * @since 2020~2024
  */
 
-enum class ElegantAccessScreen {
-    Login,
-    Main,
-    Feedback,
-    About,
+@Module
+@InstallIn(SingletonComponent::class)
+object NetworkModule {
 }
