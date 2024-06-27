@@ -1,3 +1,8 @@
+import com.android.build.gradle.internal.api.BaseVariantOutputImpl
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.decodeFromStream
+import java.io.FileInputStream
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
@@ -23,8 +28,13 @@ android {
     }
 
     buildTypes {
+        debug {
+            isMinifyEnabled = false
+            buildConfigField("Boolean", "IS_USING_DEBUG_CONFIG", "true")
+        }
         release {
             isMinifyEnabled = false
+            buildConfigField("Boolean", "IS_USING_DEBUG_CONFIG", "false")
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -40,6 +50,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.11"
@@ -47,6 +58,20 @@ android {
     packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
+        }
+    }
+
+    productFlavors.all {
+        val channels = Json.decodeFromStream<Channels>(FileInputStream(file("build.config")))
+        val appInfo = channels.channels["elegantAccessApp"]!!
+        applicationId = appInfo.packageName
+        versionCode = appInfo.versionCode
+        versionName = appInfo.versionName
+        buildConfigField("boolean", "IS_USING_DEBUG_CONFIG", "${appInfo.appConfig == "debug"}")
+        buildOutputs.all {
+            val oldName = (this as BaseVariantOutputImpl).outputFileName
+            val newName = oldName.replace("app-", "ElegantAccessExample-")
+            outputFileName = newName
         }
     }
 }
