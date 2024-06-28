@@ -3,13 +3,18 @@ package elegant.access.compose.example.ui.login
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -20,6 +25,10 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import androidx.navigation.NavGraphBuilder
+import androidx.navigation.compose.composable
+import elegant.access.compose.example.ElegantAccessScreen
 import elegant.access.compose.example.R
 import elegant.access.compose.example.ui.component.MainAppBar
 import elegant.access.compose.example.ui.component.MainAppBarConfig
@@ -47,6 +56,17 @@ private fun PreviewLoginScreen() {
     }
 }
 
+fun NavGraphBuilder.routeLoginScreen(
+    navController: NavController,
+) {
+    composable(route = ElegantAccessScreen.Login.name) {
+        LoginScreen(signInOnClick = { mail, password->
+            navController.navigate(ElegantAccessScreen.Chat.name)
+        })
+    }
+
+}
+
 @Composable
 fun LoginScreen(signInOnClick: (mail: String, pwd: String) -> Unit,) {
     Scaffold(
@@ -62,7 +82,26 @@ fun LoginScreen(signInOnClick: (mail: String, pwd: String) -> Unit,) {
                 .padding(horizontal = 16.dp, vertical = 31.dp)
                 .verticalScroll(rememberScrollState())
         ) {
-
+            Button(
+                onClick = {
+                    signInOnClick("", "")
+                },
+                shape = MaterialTheme.shapes.small,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 60.dp)
+                    .height(42.dp),
+                enabled = true,
+                colors = ButtonDefaults.buttonColors().copy(
+                    disabledContainerColor = MaterialTheme.colorScheme.onPrimaryContainer
+                )
+            ) {
+                Text(
+                    text = "Sign in",
+                    style = MaterialTheme.typography.titleSmall,
+                    color = MaterialTheme.colorScheme.onPrimary
+                )
+            }
         }
     }
 }

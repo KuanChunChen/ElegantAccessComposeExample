@@ -1,4 +1,6 @@
-package elegant.access.compose.example.data.system
+package elegant.access.compose.example.infra.openai
+
+import kotlinx.serialization.Serializable
 
 /**
  * This file is part of an Android project developed by elegant.access.
@@ -13,15 +15,16 @@ package elegant.access.compose.example.data.system
  * @version 1.0.0
  * @since 2020~2024
  */
-enum class AppConfig(
-    val baseUrl: String,
-    val openAIUrl: String,
-) {
-    Test(baseUrl = "https://elegantaccess.org/",
-        openAIUrl= "https://api.openai.com/"
-    ),
-    Release(
-        baseUrl = "https://elegantaccess.org/",
-        openAIUrl = ""
-    )
-}
+
+@Serializable
+data class ChatCompletionRequest(
+    val model: String,
+    val messages: List<Message>,
+    val stream: Boolean
+)
+
+@Serializable
+data class Message(
+    val role: String,
+    val content: String
+)

@@ -8,6 +8,7 @@ plugins {
     alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.hilt.android)
     alias(libs.plugins.ksp)
+    alias(libs.plugins.serialization)
 }
 
 android {
@@ -100,6 +101,7 @@ dependencies {
     implementation(libs.squareup.retrofit.core)
     implementation(libs.squareup.retrofit.converter.kotlinx.serialization)
     implementation(libs.squareup.okhttp.logging)
+    implementation(libs.squareup.okhttp.sse)
     implementation(libs.kotlinx.serialization)
     implementation(libs.androidx.datastore.preferences)
     testImplementation(libs.mockito.kotlin)

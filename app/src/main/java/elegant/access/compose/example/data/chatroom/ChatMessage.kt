@@ -1,4 +1,6 @@
-package elegant.access.compose.example.data.system
+package elegant.access.compose.example.data.chatroom
+
+import java.util.UUID
 
 /**
  * This file is part of an Android project developed by elegant.access.
@@ -13,15 +15,16 @@ package elegant.access.compose.example.data.system
  * @version 1.0.0
  * @since 2020~2024
  */
-enum class AppConfig(
-    val baseUrl: String,
-    val openAIUrl: String,
+data class ChatMessage(
+    val id: String = UUID.randomUUID().toString(),
+    val message: String = "",
+    val author: String,
+    val isLoading: Boolean = false
 ) {
-    Test(baseUrl = "https://elegantaccess.org/",
-        openAIUrl= "https://api.openai.com/"
-    ),
-    Release(
-        baseUrl = "https://elegantaccess.org/",
-        openAIUrl = ""
-    )
+    val isFromUser: Boolean
+        get() = author == USER_PREFIX
 }
+
+const val USER_PREFIX = "user"
+const val AI_MODEL_PREFIX = "system"
+

@@ -4,13 +4,11 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.navigation.NavController
-import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import elegant.access.compose.example.ui.login.LoginScreen
+import elegant.access.compose.example.ui.chatroom.routeChatScreen
+import elegant.access.compose.example.ui.login.routeLoginScreen
 import elegant.access.compose.example.ui.main.MainViewModel
 
 /**
@@ -32,6 +30,7 @@ enum class ElegantAccessScreen {
     Main,
     Feedback,
     About,
+    Chat,
 }
 
 @Composable
@@ -48,17 +47,7 @@ fun ElegantAccessApp(
             .safeDrawingPadding()
             .fillMaxSize()
     ) {
-        registerLoginScreen(navController)
+        routeLoginScreen(navController)
+        routeChatScreen(navController)
     }
-}
-
-fun NavGraphBuilder.registerLoginScreen(
-    navController: NavController,
-) {
-    composable(route = ElegantAccessScreen.Login.name) {
-        LoginScreen(signInOnClick = { mail, password->
-            navController.navigate(ElegantAccessScreen.Feedback.name)
-        })
-    }
-
 }

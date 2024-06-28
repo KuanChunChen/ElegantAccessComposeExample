@@ -2,4 +2,8 @@
     <string name="app_name">ElegantAccessCompose</string>
     <string name="email_title">Email</string>
     <string name="email_hint">Please enter email</string>
+    <string name="user_label">User</string>
+    <string name="model_label">Model</string>
+    <string name="action_send">Send</string>
+    <string name="chat_label">Message</string>
 </resources>
