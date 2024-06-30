@@ -4,9 +4,8 @@ import android.annotation.SuppressLint
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import elegant.access.compose.example.data.chatroom.AI_MODEL_PREFIX
+import elegant.access.compose.example.data.chatroom.Author
 import elegant.access.compose.example.data.chatroom.ChatMessage
-import elegant.access.compose.example.data.chatroom.USER_PREFIX
 import elegant.access.compose.example.data.openai.OpenAIConfig
 import elegant.access.compose.example.data.openai.OpenAIRepository
 import elegant.access.compose.example.infra.openai.ChatCompletionResult
@@ -71,7 +70,7 @@ class ChatViewModel @Inject constructor(
 
     fun startSentMessage(userMessage: String) {
         viewModelScope.launch {
-            uiState.value.addMessage(userMessage, USER_PREFIX)
+            uiState.value.addMessage(userMessage, Author.User)
             val currentMessageId: String = uiState.value.createLoadingMessage()
             textInputEnabledFlow.emit(false)
             try {
@@ -99,9 +98,9 @@ class ChatViewModel @Inject constructor(
                                     ?: result.throwable?.message ?: "Unknown Error"
 
                                 if (index == 0) {
-                                    uiState.value.appendFirstMessage(it, errorMessage)
+                                    uiState.value.appendFirstMessage(it, errorMessage,Author.SystemError )
                                 } else {
-                                    uiState.value.appendMessage(it, errorMessage, true)
+                                    uiState.value.appendMessage(it, errorMessage, true, Author.SystemError)
                                 }
                                 textInputEnabledFlow.emit(true)
                             }
@@ -114,7 +113,7 @@ class ChatViewModel @Inject constructor(
 
                 }
             } catch (e: Exception) {
-                uiState.value.addMessage(e.localizedMessage ?: "Unknown Error", AI_MODEL_PREFIX)
+                uiState.value.addMessage(e.localizedMessage ?: "Unknown Error", Author.SystemError)
                 textInputEnabledFlow.emit(true)
             }
         }

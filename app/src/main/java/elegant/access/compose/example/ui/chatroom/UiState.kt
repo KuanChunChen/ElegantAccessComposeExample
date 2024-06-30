@@ -1,8 +1,7 @@
 package elegant.access.compose.example.ui.chatroom
 
-import elegant.access.compose.example.data.chatroom.AI_MODEL_PREFIX
+import elegant.access.compose.example.data.chatroom.Author
 import elegant.access.compose.example.data.chatroom.ChatMessage
-import elegant.access.compose.example.data.chatroom.USER_PREFIX
 import elegant.access.compose.example.infra.openai.Message
 import kotlinx.coroutines.flow.MutableStateFlow
 
@@ -26,9 +25,9 @@ interface UiState {
 
     fun createLoadingMessage(): String
 
-    fun appendMessage(id: String, text: String, done: Boolean = false)
+    fun appendMessage(id: String, text: String, done: Boolean = false, author: Author? = null)
 
-    fun addMessage(text: String, author: String): String
+    fun addMessage(text: String, author: Author): String
 }
 
 
@@ -45,34 +44,39 @@ class OpenAiUIState(
         get() = messagesFlow.value.map { chatMessage ->
             Message(
                 role = when (chatMessage.author) {
-                    USER_PREFIX -> "user"
-                    AI_MODEL_PREFIX -> "system"
-                    else -> chatMessage.author
+                    is Author.User -> chatMessage.author.name
+                    is Author.System -> chatMessage.author.name
+                    else -> chatMessage.author.name
                 },
                 content = chatMessage.message
             )
         }
 
+
     override fun createLoadingMessage(): String {
-        val chatMessage = ChatMessage(author = AI_MODEL_PREFIX, isLoading = true)
+        val chatMessage = ChatMessage(author = Author.System, isLoading = true)
         messagesFlow.value += chatMessage
         return chatMessage.id
     }
 
-    fun appendFirstMessage(id: String, text: String) {
-        appendMessage(id, text, false)
+    fun appendFirstMessage(id: String, text: String, author: Author? = null) {
+        appendMessage(id, text, false, author)
     }
 
-    override fun appendMessage(id: String, text: String, done: Boolean) {
+    override fun appendMessage(id: String, text: String, done: Boolean, author: Author?) {
         val index = messagesFlow.value.indexOfFirst { it.id == id }
         if (index != -1) {
             val newText = messagesFlow.value[index].message + text
-            val updatedMessage = messagesFlow.value[index].copy(message = newText, isLoading = false)
+            val updatedMessage = messagesFlow.value[index].copy(
+                message = newText,
+                isLoading = false,
+                author = author ?: messagesFlow.value[index].author
+            )
             messagesFlow.value = messagesFlow.value.toMutableList().apply { set(index, updatedMessage) }
         }
     }
 
-    override fun addMessage(text: String, author: String): String {
+    override fun addMessage(text: String, author: Author): String {
         val chatMessage = ChatMessage(
             message = text,
             author = author

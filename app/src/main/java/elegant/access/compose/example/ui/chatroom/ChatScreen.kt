@@ -1,5 +1,6 @@
 package elegant.access.compose.example.ui.chatroom
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
@@ -34,14 +35,18 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardCapitalization
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import elegant.access.compose.example.ElegantAccessScreen
 import elegant.access.compose.example.R
+import elegant.access.compose.example.data.chatroom.Author
 import elegant.access.compose.example.data.chatroom.ChatMessage
+import elegant.access.compose.example.ui.theme.ElegantAccessComposeTheme
 
 /**
  * This file is part of an Android project developed by elegant.access.
@@ -56,6 +61,23 @@ import elegant.access.compose.example.data.chatroom.ChatMessage
  * @version 1.0.0
  * @since 2020~2024
  */
+
+@Preview
+@Composable
+private fun PreviewChatroomScreen() {
+    ElegantAccessComposeTheme {
+        ChatScreenContent(
+            navController = rememberNavController(), viewState = ChatViewModel.ViewState(
+                mutableListOf(
+                    ChatMessage(author = Author.User, message = "How to use?"),
+                    ChatMessage(author = Author.System, message = "Hello, how can I help you??"),
+                    ChatMessage(author = Author.SystemError, message = "Error:xxx")
+                ).reversed(),
+                true
+            )
+        )
+    }
+}
 
 fun NavGraphBuilder.routeChatScreen(
     navController: NavController,
@@ -72,12 +94,27 @@ fun ChatScreen(
     navController: NavController,
     vm: ChatViewModel
 ) {
-    var userMessage by rememberSaveable { mutableStateOf("") }
     val viewState = vm.viewStateFlow.collectAsState()
+
+    ChatScreenContent(
+        navController= navController,
+        onStartSendMessage = {vm.startSentMessage(it)},
+        viewState = viewState.value
+    )
+}
+
+@Composable
+private fun ChatScreenContent(
+    navController: NavController,
+    onStartSendMessage: (String) -> Unit = { _-> },
+    viewState: ChatViewModel.ViewState
+){
+    var userMessage by rememberSaveable { mutableStateOf("") }
 
     Column(
         modifier = Modifier
-            .fillMaxSize(),
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.onPrimary),
         verticalArrangement = Arrangement.Bottom
     ) {
 
@@ -88,7 +125,7 @@ fun ChatScreen(
                 .padding(horizontal = 8.dp),
             reverseLayout = true
         ) {
-            items(viewState.value.messages) { chat ->
+            items(viewState.messages) { chat ->
                 ChatItem(chat)
             }
         }
@@ -115,13 +152,13 @@ fun ChatScreen(
                 },
                 modifier = Modifier
                     .weight(0.85f),
-                enabled = viewState.value.textInputEnabled
+                enabled = viewState.textInputEnabled
             )
 
             IconButton(
                 onClick = {
                     if (userMessage.isNotBlank()) {
-                        vm.startSentMessage(userMessage)
+                        onStartSendMessage(userMessage)
                         userMessage = ""
                     }
                 },
@@ -130,7 +167,7 @@ fun ChatScreen(
                     .align(Alignment.CenterVertically)
                     .fillMaxWidth()
                     .weight(0.15f),
-                enabled = viewState.value.textInputEnabled
+                enabled = viewState.textInputEnabled
             ) {
                 Icon(
                     Icons.AutoMirrored.Default.Send,
@@ -146,10 +183,17 @@ fun ChatScreen(
 fun ChatItem(
     chatMessage: ChatMessage
 ) {
-    val backgroundColor = if (chatMessage.isFromUser) {
-        MaterialTheme.colorScheme.tertiaryContainer
-    } else {
-        MaterialTheme.colorScheme.secondaryContainer
+
+    val textColor = when {
+        chatMessage.isFromUser -> MaterialTheme.colorScheme.onPrimary
+        chatMessage.isGetError-> MaterialTheme.colorScheme.onPrimary
+        else -> MaterialTheme.colorScheme.onBackground
+    }
+
+    val backgroundColor = when {
+        chatMessage.isFromUser -> MaterialTheme.colorScheme.primary
+        chatMessage.isGetError-> MaterialTheme.colorScheme.error
+        else -> MaterialTheme.colorScheme.surfaceVariant
     }
 
     val bubbleShape = if (chatMessage.isFromUser) {
@@ -194,7 +238,8 @@ fun ChatItem(
                     } else {
                         Text(
                             text = chatMessage.message,
-                            modifier = Modifier.padding(16.dp)
+                            modifier = Modifier.padding(16.dp),
+                            color = textColor
                         )
                     }
                 }

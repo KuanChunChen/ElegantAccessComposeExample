@@ -18,13 +18,18 @@ import java.util.UUID
 data class ChatMessage(
     val id: String = UUID.randomUUID().toString(),
     val message: String = "",
-    val author: String,
+    val author: Author,
     val isLoading: Boolean = false
 ) {
     val isFromUser: Boolean
-        get() = author == USER_PREFIX
+        get() = author is Author.User
+
+    val isGetError: Boolean
+        get() = author is Author.SystemError
 }
 
-const val USER_PREFIX = "user"
-const val AI_MODEL_PREFIX = "system"
-
+sealed class Author(val name: String) {
+    data object User : Author("user")
+    data object System : Author("system")
+    data object SystemError : Author("system_error")
+}
