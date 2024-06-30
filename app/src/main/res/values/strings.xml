@@ -3,7 +3,15 @@
     <string name="email_title">Email</string>
     <string name="email_hint">Please enter email</string>
     <string name="user_label">User</string>
+    <string name="sign_in">Sign in</string>
     <string name="model_label">Model</string>
     <string name="action_send">Send</string>
     <string name="chat_label">Message</string>
+    <string name="enter_email">Email Address</string>
+    <string name="error_email">Email incorrect</string>
+    <string name="enter_password">Please enter password</string>
+    <string name="password_strong_error_symbol">The password cannot contain spaces or special character</string>
+    <string name="forget_password">Forgot password?</string>
+    <string name="welcome_message">Welcome to Elegant Access Chat AI</string>
+
 </resources>

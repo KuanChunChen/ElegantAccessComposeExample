@@ -7,12 +7,17 @@ import elegant.access.compose.example.infra.openai.ChatCompletionRequest
 import elegant.access.compose.example.infra.openai.ChatCompletionResult
 import elegant.access.compose.example.infra.openai.Message
 import elegant.access.compose.example.infra.openai.OpenAIErrorResponse
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.channels.ChannelResult
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.channels.trySendBlocking
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.launch
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
@@ -20,6 +25,7 @@ import okhttp3.Request
 import okhttp3.RequestBody.Companion.toRequestBody
 import okhttp3.sse.EventSource
 import okhttp3.sse.EventSourceListener
+import java.util.concurrent.TimeoutException
 import javax.inject.Inject
 
 /**
@@ -40,6 +46,22 @@ class OpenAIRepository @Inject constructor(
     private val appConfig: AppConfig,
     private val eventSourceFactory: EventSource.Factory,
 ) {
+
+    private var timeoutJob: Job? = null
+
+    private fun CoroutineScope.resetTimeout(
+        eventSource: EventSource,
+        trySend: (ChatCompletionResult) -> ChannelResult<Unit>,
+        close: () -> Unit
+    ) {
+        timeoutJob?.cancel()
+        timeoutJob = launch {
+            delay(30_000)
+            trySend(ChatCompletionResult.Error(null, TimeoutException("Request timed out")))
+            eventSource.cancel()
+            close()
+        }
+    }
 
     suspend fun createChatCompletionSteaming(
         config: OpenAIConfig,
@@ -62,6 +84,7 @@ class OpenAIRepository @Inject constructor(
         val eventSourceListener = object : EventSourceListener() {
             override fun onOpen(eventSource: EventSource, response: okhttp3.Response) {
                 Log.d("test", "onOpen")
+                resetTimeout(eventSource, { trySend(it) }, { close() })
             }
 
             override fun onEvent(
@@ -71,6 +94,7 @@ class OpenAIRepository @Inject constructor(
                 data: String
             ) {
                 Log.d("test", "data:$data")
+                resetTimeout(eventSource, { trySend(it) }, { close() })
 
                 if (data == "[DONE]") {
                     trySendBlocking(ChatCompletionResult.Complete).isSuccess
@@ -114,6 +138,12 @@ class OpenAIRepository @Inject constructor(
         }
 
         val eventSource = eventSourceFactory.newEventSource(request, eventSourceListener)
-        awaitClose { eventSource.cancel() }
+        resetTimeout(eventSource, { trySend(it) }, { close() })
+
+        awaitClose {
+            eventSource.cancel()
+            timeoutJob?.cancel()
+            timeoutJob = null
+        }
     }.flowOn(Dispatchers.IO)
 }
